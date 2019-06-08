@@ -37,7 +37,7 @@ var _ = Describe("Init", func() {
 			kepDirName := "a-good-but-complicated-idea"
 
 			runtimeSettings := &settingsfakes.FakeRuntime{}
-			runtimeSettings.PrincipalReturns(authorOne)
+			runtimeSettings.PrincipalGithubHandleReturns(authorOne)
 			runtimeSettings.TargetDirReturns(kepDirName)
 			runtimeSettings.ContentRootReturns(tmpDir)
 
@@ -66,7 +66,7 @@ var _ = Describe("Init", func() {
 			targetDir := filepath.Join(sigDir, kepDirName)
 
 			runtimeSettings := &settingsfakes.FakeRuntime{}
-			runtimeSettings.PrincipalReturns(authorOne)
+			runtimeSettings.PrincipalGithubHandleReturns(authorOne)
 			runtimeSettings.TargetDirReturns(targetDir)
 			runtimeSettings.ContentRootReturns(tmpDir)
 
@@ -96,7 +96,7 @@ var _ = Describe("Init", func() {
 			targetDir := filepath.Join(sigDir, subprojectDir, kepDirName)
 
 			runtimeSettings := &settingsfakes.FakeRuntime{}
-			runtimeSettings.PrincipalReturns(authorOne)
+			runtimeSettings.PrincipalGithubHandleReturns(authorOne)
 			runtimeSettings.TargetDirReturns(targetDir)
 			runtimeSettings.ContentRootReturns(tmpDir)
 

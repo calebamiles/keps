@@ -14,10 +14,9 @@ import (
 	libgithttp "gopkg.in/src-d/go-git.v4/plumbing/transport/http"
 
 	"github.com/calebamiles/keps/pkg/changes/auth"
-	"github.com/calebamiles/keps/pkg/settings/cache"
 )
 
-func Clone(token auth.TokenProvider, repoUrl string, toLocation string) (Repo, error) {
+func Clone(token auth.TokenProvider, cacheDir string, repoUrl string, toLocation string) (Repo, error) {
 	authToken, err := token.Value()
 	if err != nil {
 		return nil, err
@@ -44,7 +43,7 @@ func Clone(token auth.TokenProvider, repoUrl string, toLocation string) (Repo, e
 	nameish := strings.Replace(toLocation, string(filepath.Separator), "-", -1)
 	nameish = strings.Replace(nameish, "-", "", 1) // just the leading `-`
 
-	lockLocation := filepath.Join(cache.Dir(), fmt.Sprintf("%s-%s", nameish, repositoryFileLock))
+	lockLocation := filepath.Join(cacheDir, fmt.Sprintf("%s-%s", nameish, repositoryFileLock))
 	err = os.MkdirAll(filepath.Dir(lockLocation), os.ModePerm)
 	if err != nil {
 		return nil, err

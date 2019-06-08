@@ -22,7 +22,7 @@ import (
 // Unlike other functions in workflow/ we need to return the path explicitly as it may have
 // changed from Runtime.TargetDir() for SIG or Kubernetes wide KEPs
 func Init(runtime settings.Runtime) (string, error) {
-	authors := []string{runtime.Principal()}
+	authors := []string{runtime.PrincipalGithubHandle()}
 	title := buildTitleFromPath(filepath.Base(runtime.TargetDir()))
 
 	routingInfo, err := sigs.BuildRoutingFromPath(runtime.ContentRoot(), runtime.TargetDir())
@@ -40,7 +40,7 @@ func Init(runtime settings.Runtime) (string, error) {
 		return "", err
 	}
 
-	// we could pass nil here but now you now the type
+	// we could pass nil here but the type hint is probably more helpful
 	kep, err := keps.New(kepMetadata, []sections.Entry{})
 	if err != nil {
 		//TODO erase skeleton if an error occurred
@@ -64,5 +64,4 @@ func Init(runtime settings.Runtime) (string, error) {
 
 func buildTitleFromPath(p string) string {
 	return strings.Title(strings.Replace(strings.Replace(p, "-", " ", -1), "_", " ", -1))
-
 }

@@ -2,6 +2,7 @@ package auth
 
 import (
 	"io/ioutil"
+	"strings"
 )
 
 func NewProvideTokenFromPath(p string) (TokenProvider, error) {
@@ -11,7 +12,7 @@ func NewProvideTokenFromPath(p string) (TokenProvider, error) {
 			return "", err
 		}
 
-		return string(tokenBytes), nil
+		return strings.TrimSpace(string(tokenBytes)), nil
 	}
 
 	t := &tokenFromPath{
@@ -20,7 +21,6 @@ func NewProvideTokenFromPath(p string) (TokenProvider, error) {
 
 	return t, nil
 }
-
 
 type TokenProvider interface {
 	Value() (string, error)
@@ -35,4 +35,3 @@ type tokenFromPath struct {
 func (t *tokenFromPath) Value() (string, error) {
 	return t.value()
 }
-

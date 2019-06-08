@@ -5,18 +5,18 @@ import (
 )
 
 type Old struct {
-	KepNumber         string    `yaml:"kep_number,omitempty"`
-	Title             string    `yaml:"title,omitempty"`
-	Status            string    `yaml:"status,omitempty"`
-	Authors           []string  `yaml:"authors"`
-	OwningSIG         string    `yaml:"owning-sig,omitempty"`
-	ParticipatingSIGs []string  `yaml:"participating-sigs,omitempty"`
-	Reviewers         []string  `yaml:"reviewers,omitempty"`
-	Approvers         []string  `yaml:"approvers,omitempty"`
-	Editor            string    `yaml:"editor,omitempty"`
-	CreationDate      time.Time `yaml:"creation-date,omitempty"`
-	LastUpdated       time.Time `yaml:"last-updated,omitempty"`
-	SeeAlso           []string  `yaml:"see-also,omitempty"`
-	Replaces          []string  `yaml:"replaces,omitempty"`
-	SupersededBy      []string  `yaml:"superseded-by,omitempty"`
+	KepNumber         string    `json:"kep_number,omitempty"`
+	Title             string    `json:"title,omitempty"`
+	Status            string    `json:"status,omitempty"`
+	Authors           []string  `json:"authors"`
+	OwningSIG         string    `json:"owning-sig,omitempty"`
+	ParticipatingSIGs []string  `json:"participating-sigs,omitempty"`
+	Reviewers         []string  `json:"reviewers,omitempty"`
+	Approvers         []string  `json:"approvers,omitempty"`
+	Editor            string    `json:"editor,omitempty"`
+	CreationDate      time.Time `json:"creation-date,omitempty"`
+	LastUpdated       time.Time `json:"last-updated,omitempty"`
+	SeeAlso           []string  `json:"see-also,omitempty"`
+	Replaces          []string  `json:"replaces,omitempty"`
+	SupersededBy      []string  `json:"superseded-by,omitempty"`
 }

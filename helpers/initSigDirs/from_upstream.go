@@ -21,6 +21,9 @@ func main() {
 	var errs *multierror.Error
 	for _, sigName := range sigs.All() {
 		errs = multierror.Append(errs, os.MkdirAll(filepath.Join(initLocation, sigName), os.ModePerm))
+
+		_, err := os.Create(filepath.Join(initLocation, sigName, ".gitkeep"))
+		errs = multierror.Append(errs, err)
 	}
 
 	if errs.ErrorOrNil() != nil {

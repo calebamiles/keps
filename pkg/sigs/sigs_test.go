@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"gopkg.in/yaml.v2"
+	"sigs.k8s.io/yaml"
 
 	"github.com/calebamiles/keps/pkg/sigs"
 )
@@ -107,16 +107,16 @@ func fetchUpstreamSIGList() *upstreamSIGList {
 }
 
 type upstreamSIGList struct {
-	SIGs []upstreamSIGEntry `yaml:"sigs"`
+	SIGs []upstreamSIGEntry `json:"sigs"`
 }
 
 type upstreamSIGEntry struct {
-	Name        string                    `yaml:"dir"` // we actually want to look at what the SIG is called on disk
-	Subprojects []upstreamSubprojectEntry `yaml:"subprojects"`
+	Name        string                    `json:"dir"` // we actually want to look at what the SIG is called on disk
+	Subprojects []upstreamSubprojectEntry `json:"subprojects"`
 }
 
 type upstreamSubprojectEntry struct {
-	Name string `yaml:"name"`
+	Name string `json:"name"`
 }
 
 const upstreamSIGListURL = "https://raw.githubusercontent.com/kubernetes/community/master/sigs.yaml"

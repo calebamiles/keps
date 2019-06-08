@@ -10,26 +10,28 @@ import (
 	"sync/atomic"
 	"time"
 
-	//bolt  "go.etcd.io/bbolt" // TODO use to implement filtering
 	"github.com/hashicorp/go-multierror"
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/yaml.v2"
+	"sigs.k8s.io/yaml"
 
 	"github.com/calebamiles/keps/pkg/keps"
 	"github.com/calebamiles/keps/pkg/keps/states"
 	"github.com/calebamiles/keps/pkg/settings"
 )
 
+type FilteringCriteria func(metadata.KEP) bool
+
 type Index interface {
-	ClaimNextShortID() int // implementations of Index MUST tolerate HasShortID being called from within Update() to prevent deadlocks
-	HasShortID(int) bool   // implementations of Index MUST tolerate HasShortID being called from within Update() to prevent deadlocks
+	ClaimNextShortID() int   // implementations of Index MUST tolerate ShortIdClaimed being called from within Update() to prevent deadlocks
+	ShortIdClaimed(int) bool // implementations of Index MUST tolerate ShortIdClaimed being called from within Update() to prevent deadlocks
 
 	Fetch(string) (keps.Instance, error)
 
-	// TODO add Filter(metadata.KEP) metadata.KEP
 	// TODO add Remove(keps.Instance)
 	Update(keps.Instance) error
 	Persist() error
+
+	// TODO add Filter(metadata.KEP) metadata.KEP
 }
 
 func New(contentRoot string) (Index, error) {
@@ -125,10 +127,10 @@ func Rebuild(runtime settings.Runtime) (Index, error) {
 
 		switch kep.State() {
 		case states.Draft:
+			// DISCUSS: should we index draft KEPs
 			return filepath.SkipDir
 		case states.Provisional:
 			// DISCUSS: should we index provisional KEPs
-			return filepath.SkipDir
 		}
 
 		err = kepIndex.Update(kep)
@@ -147,12 +149,12 @@ func Rebuild(runtime settings.Runtime) (Index, error) {
 }
 
 type index struct {
-	KEPs            []*kepEntry              `yaml:"keps"`
-	NextNumberField int64                    `yaml:"NEXT_KEP_NUMBER"`
-	contentRoot     string                   `yaml:"-"` // do not persist this
-	kepShortIDs     *sync.Map                `yaml:"-"` // do not persist this
-	locker          *sync.RWMutex            `yaml:"-"` // do not persist this
-	kepsSet         map[string]keps.Instance `yaml:"-"` // do not persist this
+	KEPs            []*kepEntry              `json:"keps"`
+	NextNumberField int64                    `json:"NEXT_KEP_NUMBER"`
+	contentRoot     string                   `json:"-"` // do not persist this
+	kepShortIDs     *sync.Map                `json:"-"` // do not persist this
+	locker          *sync.RWMutex            `json:"-"` // do not persist this
+	kepsSet         map[string]keps.Instance `json:"-"` // do not persist this
 }
 
 func (i *index) Update(k keps.Instance) error {
@@ -184,7 +186,7 @@ func (i *index) Fetch(id string) (keps.Instance, error) {
 	return k, nil
 }
 
-func (i *index) HasShortID(given int) bool {
+func (i *index) ShortIdClaimed(given int) bool {
 	// no additional locking should be needed here
 	_, found := i.kepShortIDs.Load(given)
 	return found
@@ -232,15 +234,15 @@ func (i *index) Persist() error {
 }
 
 type kepEntry struct {
-	ShortIDField         int         `yaml:"short_id"`
-	UUIDField            string      `yaml:"uuid"`
-	TitleField           string      `yaml:"title"`
-	OwningSIGField       string      `yaml:"owning_sig"`
-	AuthorsField         []string    `yaml:"authors"`
-	ContentLocationField string      `yaml:"content_location"`
-	CreatedField         time.Time   `yaml:"created"`
-	LastUpdatedField     time.Time   `yaml:"last_updated"`
-	StateField           states.Name `yaml:"state"`
+	ShortIDField         int         `json:"short_id"`
+	UUIDField            string      `json:"uuid"`
+	TitleField           string      `json:"title"`
+	OwningSIGField       string      `json:"owning_sig"`
+	AuthorsField         []string    `json:"authors"`
+	ContentLocationField string      `json:"content_location"`
+	CreatedField         time.Time   `json:"created"`
+	LastUpdatedField     time.Time   `json:"last_updated"`
+	StateField           states.Name `json:"state"`
 }
 
 type ByIncreasingAge []*kepEntry

@@ -8,7 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/hashicorp/go-multierror"
-	"gopkg.in/yaml.v2"
+	"sigs.k8s.io/yaml"
 
 	"github.com/calebamiles/keps/pkg/index"
 	"github.com/calebamiles/keps/pkg/keps/states"
@@ -200,6 +200,7 @@ var _ = Describe("working with an index of KEPs", func() {
 
 		Describe("Open()", func() {
 			It("reads a kep.yaml from disk", func() {
+				Fail("delete this function and only expose Rebuild")
 				tmpDir, err := ioutil.TempDir("", "kep-index")
 				Expect(err).ToNot(HaveOccurred())
 				defer os.RemoveAll(tmpDir)
@@ -236,13 +237,13 @@ func writeTestMetadata(dir string) {
 }
 
 type testMetadata struct {
-	AuthorsField     []string    `yaml:"authors"`
-	TitleField       string      `yaml:"title"`
-	ShortIDField     *int        `yaml:"kep_number",omitempty`
-	StateField       states.Name `yaml:"state"`
-	LastUpdatedField time.Time   `yaml:"last_updated"`
-	CreatedField     time.Time   `yaml:"created"`
-	UniqueIDField    string      `yaml:"uuid"`
-	SectionsField    []string    `yaml:"sections"`
-	OwningSIGField   string      `yaml:"owning_sig"`
+	AuthorsField     []string    `json:"authors"`
+	TitleField       string      `json:"title"`
+	ShortIDField     *int        `json:"kep_number",omitempty`
+	StateField       states.Name `json:"state"`
+	LastUpdatedField time.Time   `json:"last_updated"`
+	CreatedField     time.Time   `json:"created"`
+	UniqueIDField    string      `json:"uuid"`
+	SectionsField    []string    `json:"sections"`
+	OwningSIGField   string      `json:"owning_sig"`
 }

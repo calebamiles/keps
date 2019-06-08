@@ -10,7 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/hashicorp/go-multierror"
 	log "github.com/sirupsen/logrus"
-	"gopkg.in/yaml.v2"
+	"sigs.k8s.io/yaml"
 
 	"github.com/calebamiles/keps/helpers/convert/internal/extract"
 	"github.com/calebamiles/keps/helpers/convert/internal/metadata"

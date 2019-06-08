@@ -10,15 +10,13 @@ import (
 
 	"github.com/gofrs/flock"
 	libgit "gopkg.in/src-d/go-git.v4"
-
-	"github.com/calebamiles/keps/pkg/settings/cache"
 )
 
-func Open(p string) (Repo, error) {
+func Open(p string, cacheDir string) (Repo, error) {
 	nameish := strings.Replace(p, string(filepath.Separator), "-", -1)
 	nameish = strings.Replace(nameish, "-", "", 1) // just the leading `-`
 
-	lockLocation := filepath.Join(cache.Dir(), fmt.Sprintf("%s-%s", nameish, repositoryFileLock))
+	lockLocation := filepath.Join(cacheDir, fmt.Sprintf("%s-%s", nameish, repositoryFileLock))
 	err := os.MkdirAll(filepath.Dir(lockLocation), os.ModePerm)
 	if err != nil {
 		return nil, err
